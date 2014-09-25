@@ -1,6 +1,6 @@
 module R3Status
   class VolumeBlock < Block
-    attr_accessor :format, :format_muted, :default_color, :color_muted, :step
+    attr_accessor :step
     
     def initialize(**args)
       args = {formats: {muted: " %{volume}%", unmuted: " %{volume}%"},
@@ -19,11 +19,11 @@ module R3Status
     
     def clicked button, x, y
       case button
-      when 1, 4
+      when 4
         increase
       when 2
         toggle_mute
-      when 3, 5
+      when 5
         decrease
       end
     end
@@ -33,10 +33,10 @@ module R3Status
       `amixer -q set Master toggle`
     end
     def increase
-      `amixer -c 0 set Master #{step}+ unmute`
+      `amixer -c 0 set Master #{step}%+ unmute`
     end
     def decrease
-      `amixer -c 0 set Master #{step}- unmute`
+      `amixer -c 0 set Master #{step}%- unmute`
     end
     def volume
       `amixer -c 0 get Master | grep Mono: | cut -d " " -f6 | tr -d [,],%`.to_i

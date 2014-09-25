@@ -6,16 +6,18 @@ module R3Status
     attr_accessor :full_text, :text_color, :name, :formats, :colors
     
     def initialize(**args)
+      self.colors ||= {}
+      self.formats ||= Hash.new(DEFAULT_FORMAT)
       args.each do |k, v|
         v.default = v[:default] if (v.is_a? Hash) && (v.key? :default)
         send "#{k}=", v
       end
-      
-      self.colors ||= {}
-      self.formats ||= Hash.new(DEFAULT_FORMAT)
     end
     
     def update; end
+     
+    def terminate; end
+     
     def clicked(button, x, y); end
     
     def to_s(prefix: nil, postfix: nil)
@@ -24,5 +26,12 @@ module R3Status
           "separator": false})
     end
     
+    def format
+      formats.default 
+    end
+    
+    def format=(fmt)
+      @formats.default = fmt 
+    end
   end
 end

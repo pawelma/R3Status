@@ -1,12 +1,11 @@
 module R3Status
   class TimeBlock < Block
-    attr_accessor :format
     
-    def initialize(format: "%H:%m @ %e/%M/%Y", **args)
-      @format = format
-      
-      super()
+    def initialize(**args)
+      args = {format: "%H:%m @ %e/%M/%Y"}.merge(args)
+      super(args)
     end
+    
     def update
       self.full_text = Time.now.strftime(format)
     end
