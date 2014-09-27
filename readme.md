@@ -14,9 +14,22 @@ gem install r3status
 
 R3Status is used by creating a starter script, and running it from within i3.
 
-The library consists of a status line (`R3Status::StatusLine`) and blocks.
+The library consists of a status line (`R3Status::StatusLine`) and blocks (Found in the `R3Status::Blocks` module).
 A status line represents one "task bar", and contains "blocks".
 A block is an indicator that has text and color, and can respond to mouse clicks.
+All default blocks derive from `R3Status::Blocks::Base`, but any object can be used as long as it has the following methods:
+```ruby
+  def update; end
+  def to_s(prefix, postfix); end
+  def terminate;
+```
+
+Each block has a set of `formats` and `colors`, that help the block choose the best suitable values based on the block's state.
+At any given time, a block is in one of several states (as defined by each block class).
+
+As well as the `formats` and `colors` hashes, a block also has the `format` and `color` attributes,
+which gets and sets the _defualt_ color and format. The default values will be used if no format or value
+was specified for the current state.
 
 #### Example ####
 File: `~/bin/r3status_start.rb`:
@@ -25,7 +38,7 @@ File: `~/bin/r3status_start.rb`:
 require 'r3status'
 
 status = R3Status::StatusLine.new
-status << R3Status::VolumeBlock.new
+status << R3Status::Blocks::Volume.new
 status << R3Status::TimeBlock.new
 
 status.run
@@ -81,156 +94,37 @@ The static block can recieve a block, through the constructor, that will be yiel
 
 ## API Reference ##
 
-### StatusLine ###
-A class representing the status bar. Blocks can be added, and will be displayed.
+See http://rubydoc.info/gems/r3status/
 
-#### Properties ####
-_prefix (String)_ - A string the will be added into the start of every block.
+## Extending `R3Status::Blocks::Base` ##
 
-_postfix (String)_ - A string the will be added into the end of every block.
-
-_update_interval (Fixnum / Float)_ - The time between each bar update.
-
-### Block ###
-A base class for all the blocks. Can be used as a dumb text display.
-
-#### Properties ####
-_full_text (String)_ - The displayed text. Will be used to update the bar.
-
-_text_color (String)_ - The text's color. Will be used to update the bar.
-
-_name (String)_ - The name of the block. This property is optional, but it must be set for the block to recieve click events
-
-_formats (Hash)_ - A hash of formats. The keys should be symbols representing the block's states (as specified by each subclass),
-the keys should be strings.
-
-_colors (Hash)_ - A hash of colors. The keys should be symbols representing the block's states (as specified by each subclass),
-the keys should be strings.
-
-_format (String)_ Gets or sets the default format.
-
-### TimeBlock < Block ###
-A simple time indicator. Has no state. Format string should be in ruby's time format (as used in strftime).
-
-#### Properties ####
-_Inherited_
-
-#### States ####
-_None_
-
-#### Format Values ####
-_N/A_
-
-#### Examples ####
-```ruby
-status_line << TimeBlock.new
-status_line << TimeBlock.new(format: " %H:%M    %e/%m/%Y")
-```
-
-### BatteryBlock < Block ###
-A battery indicator.
-
-#### Properties ####
-
-_path (String)_ - The path of the battery in the filesystem (e.g. "/sys/class/power_supply/BAT1/", or "/proc/acpi/battery/BAT0/")
-
-_Inherited_
-
-#### States ####
-`:charging, :discharging, :full, :unknown`
-
-#### Format Values ####
-_val_, _capacity_ - The battery percentage (without the '%' sign).
-
-_status_ - The battery status.
-
-#### Examples ####
-```ruby
-bat_path = "/sys/class/power_supply/BAT1/"
-
-status_line << BatteryBlock.new(path: bat_path)
-status_line << BatteryBlock.new(path: bat_path,
-    formats: {charging: "   %{capacity}%", default: "  %{capacity}\%"},
-    colors: {full: '#69B842', charging: '#F4C91D', discharging: '#9B3E9B'})
-```
-
-### VolumeBlock < Block ###
-An indicator showing the system volume (using `amixer`), allowing the user to raise, lower, and mute it.
-
-#### Properties ####
-
-_step (Fixnum)_ - The amount of volume (in %) to lower / raise when the block is scrolled.
-
-_Inherited_
-
-#### States ####
-`:muted, :unmuted`
-
-#### Format Values ####
-_val_, _volume_ - The current volume (without the '%' sign).
-
-#### Examples ####
-```ruby
-status_line << VolumeBlock.new
-status_line << VolumeBlock.new(formats: {muted: "%{volume}(muted)"})
-status_line << VolumeBlock.new(colors: {muted: '#ff0000'})
-```
-
-### KeyboardLayoutBlock < Block ###
-Displays the current keyboard layout (using the xkblayout-state utility).
-
-#### Properties ####
-_Inherited_
-
-#### States ####
-Depends on the system configuration. A state is the symbol of the current layout (e.g., _:us_ for en_US)
-
-#### Format Values ####
-_val_, _sym_ - The symbol of the current keyboard layout.
-
-#### Examples ####
-```ruby
-status_line << KeyboardLayoutBlock.new
-status_line << KeyboardLayoutBlock.new(formats: {us: "1) EN", ru: "2) RU"},
-                                       colors: {us: '#42B3FB', ru: '#FB4942'})
-```
-
-
-_more soon_
-
-
-
-
-## Extending `R3Status::Block` ##
-
-_soon_
+_soon_ (In the meantime, have a look at the source code and maybe you'll figure out)
 
 ## Examples ##
-
+An older example was using classes such as `VolumeBlock`, `TimeBlock`, and `BatteryBlock`;
+These classes are now deprecated in favour of `Blocks::Volume`, `Blocks::Clock`, and `Blocks::Power`.
 ```ruby
-#!/usr/bin/env ruby
-require_relative 'r3status'
+require_relative '../prog/geany/r3status/lib/r3status.rb'
+include R3Status
+include R3Status::Blocks
+
 BAT_PATH = "/sys/class/power_supply/BAT1/"
 
-include R3Status
-# Creates a StatusLine object.
 status_line = StatusLine.new(prefix: '\t')
 
-# Adds a battery status indicator
-# (icons best displayed using FontAwesome)
-status_line << BatteryBlock.new(path: BAT_PATH, 
+status_line << Power.new(
     formats: {charging: "   %{capacity}%", default: "  %{capacity}\%"},
-    colors: {full: '#69B842', charging: '#F4C91D', discharging: '#9B3E9B'})
+    colors: {full: '#69B842', charging: '#F4C91D', discharging: '#9B3E9B'}
+    )
 
-# Adds keyboard layout display
-status_line << KeyboardLayoutBlock.new(formats: {il: " HE", us: " EN"},
-    colors: {il: '#5E88EF', us: '#B82E27'})
+status_line << KeyboardLayout.new(
+    formats: {il: " HE", us: " EN"},
+    colors: {il: '#5E88EF', us: '#B82E27'}
+    )
 
-# Adds a new volume indicator
-# Responds to mouse click (lower/raise/mute)
-status_line << VolumeBlock.new
+status_line << Volume.new
+status_line << Clock.new(format: " %H:%M")
+status_line << Clock.new(format: " %e/%m/%Y")
 
-# Adds a clock
-status_line << TimeBlock.new(format: " %H:%M    %e/%m/%Y")
 status_line.run
 ```

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>readme - RDoc Documentation</title>
+
+<link href="./fonts.css" rel="stylesheet">
+<link href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/navigation.js"></script>
+<script src="./js/search_index.js"></script>
+<script src="./js/search.js"></script>
+<script src="./js/searcher.js"></script>
+<script src="./js/darkfish.js"></script>
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-R3Status">R3Status</a>
+    <li><a href="#label-Introduction">Introduction</a>
+    <li><a href="#label-Installation">Installation</a>
+    <li><a href="#label-Usage">Usage</a>
+    <li><a href="#label-Example">Example</a>
+    <li><a href="#label-Capabilities">Capabilities</a>
+    <li><a href="#label-Text+and+Color">Text and Color</a>
+    <li><a href="#label-Click+Events">Click Events</a>
+    <li><a href="#label-API+Reference">API Reference</a>
+    <li><a href="#label-Extending+R3Status%3A%3ABlocks%3A%3ABase">Extending <code>R3Status::Blocks::Base</code></a>
+    <li><a href="#label-Examples">Examples</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./r3status_gemspec.html">r3status.gemspec</a>
+  
+    <li><a href="./readme_md.html">readme</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page readme.md">
+
+<h1 id="label-R3Status"><a href="R3Status.html">R3Status</a><span><a href="#label-R3Status">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+
+<h2 id="label-Introduction">Introduction<span><a href="#label-Introduction">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+
+<p><a href="R3Status.html">R3Status</a> is replacement to i3&#39;s
+<code>i3status</code>. Written in ruby, it has compatability with the i3bar
+protocol, and a wider range of feature than i3status.</p>
+
+<h2 id="label-Installation">Installation<span><a href="#label-Installation">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+
+<pre>gem install r3status</pre>
+
+<h2 id="label-Usage">Usage<span><a href="#label-Usage">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+
+<p><a href="R3Status.html">R3Status</a> is used by creating a starter script,
+and running it from within i3.</p>
+
+<p>The library consists of a status line (<code>R3Status::StatusLine</code>)
+and blocks (Found in the <code>R3Status::Blocks</code> module). A status
+line represents one “task bar”, and contains “blocks”. A block is an
+indicator that has text and color, and can respond to mouse clicks. All
+default blocks derive from <code>R3Status::Blocks::Base</code>, but any
+object can be used as long as it has the following methods: <code>ruby  
+def update; end   def to_s(prefix, postfix); end   def terminate; </code></p>
+
+<p>Each block has a set of <code>formats</code> and <code>colors</code>, that
+help the block choose the best suitable values based on the block&#39;s
+state. At any given time, a block is in one of several states (as defined
+by each block class).</p>
+
+<p>As well as the <code>formats</code> and <code>colors</code> hashes, a block
+also has the <code>format</code> and <code>color</code> attributes, which
+gets and sets the <em>defualt</em> color and format. The default values
+will be used if no format or value was specified for the current state.</p>
+
+<h4 id="label-Example">Example<span><a href="#label-Example">&para;</a> <a href="#documentation">&uarr;</a></span></h4>
+
+<p>File: <code>~/bin/r3status_start.rb</code>:</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">&#39;r3status&#39;</span>
+
+<span class="ruby-identifier">status</span> = <span class="ruby-constant">R3Status</span><span class="ruby-operator">::</span><span class="ruby-constant">StatusLine</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-identifier">status</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">R3Status</span><span class="ruby-operator">::</span><span class="ruby-constant">Blocks</span><span class="ruby-operator">::</span><span class="ruby-constant">Volume</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-identifier">status</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">R3Status</span><span class="ruby-operator">::</span><span class="ruby-constant">TimeBlock</span>.<span class="ruby-identifier">new</span>
+
+<span class="ruby-identifier">status</span>.<span class="ruby-identifier">run</span>
+</pre>
+
+<p>In ~/.i3/config:</p>
+
+<pre>bar {
+  #status_command i3status
+  status_command $HOME/bin/r3status_start.rb
+}</pre>
+
+<h2 id="label-Capabilities">Capabilities<span><a href="#label-Capabilities">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+
+<h4 id="label-Text+and+Color">Text and Color<span><a href="#label-Text+and+Color">&para;</a> <a href="#documentation">&uarr;</a></span></h4>
+
+<p>Each block has a <code>full_text</code> field which is set each bar update,
+as well as a <code>text_color</code> field. These fields, although
+settable, will usually won&#39;t be set by the user; instead, when
+possible, the user will provide a set of colors and a set of formats, from
+which the block will choose the most suitable according to its current
+state.</p>
+
+<p>The colors are in the form of #RRGGBB, and the format is the standard ruby
+format string. Each block has different set values for the format string,
+but the format string can also use &#39;%{val}&#39;, which is always set by
+the block to a “default” value. (e.g. the volume percentage in the volume
+block)</p>
+
+<pre class="ruby"><span class="ruby-constant">BAT_PATH</span> = <span class="ruby-string">&quot;/sys/class/power_supply/BAT1/&quot;</span>
+<span class="ruby-identifier">status_line</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">BatteryBlock</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">path</span><span class="ruby-operator">:</span> <span class="ruby-constant">BAT_PATH</span>, 
+    <span class="ruby-identifier">formats</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">charging</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;   %{capacity}%&quot;</span>, <span class="ruby-identifier">discharging</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;  %{capacity}\%&quot;</span>},
+    <span class="ruby-identifier">colors</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">full</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;#69B842&#39;</span>, <span class="ruby-identifier">charging</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;#F4C91D&#39;</span>, <span class="ruby-identifier">discharging</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;#9B3E9B&#39;</span>})
+</pre>
+
+<p>When passing a hash to the block constructor (for <code>formats</code> or
+<code>colors</code>), a special hash value can be specified, and it&#39;ll
+be used as the default value in case the block couldn&#39;t find a suitable
+value.</p>
+
+<pre class="ruby"><span class="ruby-constant">BAT_PATH</span> = <span class="ruby-string">&quot;/sys/class/power_supply/BAT1/&quot;</span>
+<span class="ruby-identifier">status_line</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">BatteryBlock</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">path</span><span class="ruby-operator">:</span> <span class="ruby-constant">BAT_PATH</span>, 
+    <span class="ruby-identifier">formats</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">charging</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;   %{capacity}%&quot;</span>, <span class="ruby-identifier">default</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;  %{capacity}\%&quot;</span>},
+    <span class="ruby-identifier">colors</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">default</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;#69B842&#39;</span>, <span class="ruby-identifier">charging</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;#F4C91D&#39;</span>, <span class="ruby-identifier">discharging</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;#9B3E9B&#39;</span>})
+</pre>
+
+<h4 id="label-Click+Events">Click Events<span><a href="#label-Click+Events">&para;</a> <a href="#documentation">&uarr;</a></span></h4>
+
+<p><a href="R3Status.html">R3Status</a> is able to process the click events
+recieved by i3bar. When clicked, a block will recieve the clicked mouse
+button (Left, Right, Middle, Scroll-Up, Scroll-Down) and the click&#39;s
+coordinates. Some of the default blocks use this capability when
+appropriate (try scrolling over the volume block, or clicking it with the
+middle mouse button).</p>
+
+<p>The static block can recieve a block, through the constructor, that will be
+yielded when the block is clicked.</p>
+
+<h2 id="label-API+Reference">API Reference<span><a href="#label-API+Reference">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+
+<p>See <a
+href="http://rubydoc.info/gems/r3status">rubydoc.info/gems/r3status</a>/</p>
+
+<h2 id="label-Extending+R3Status%3A%3ABlocks%3A%3ABase">Extending <code>R3Status::Blocks::Base</code><span><a href="#label-Extending+R3Status%3A%3ABlocks%3A%3ABase">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+
+<p><em>soon</em> (In the meantime, have a look at the source code and maybe
+you&#39;ll figure out)</p>
+
+<h2 id="label-Examples">Examples<span><a href="#label-Examples">&para;</a> <a href="#documentation">&uarr;</a></span></h2>
+
+<p>An older example was using classes such as <code>VolumeBlock</code>,
+<code>TimeBlock</code>, and <code>BatteryBlock</code>; These classes are
+now deprecated in favour of <code>Blocks::Volume</code>,
+<code>Blocks::Clock</code>, and <code>Blocks::Power</code>. “`ruby
+require_relative &#39;../prog/geany/r3status/lib/r3status.rb&#39; include
+<a href="R3Status.html">R3Status</a> include <a
+href="R3Status/Blocks.html">R3Status::Blocks</a></p>
+
+<p>BAT_PATH = “/sys/class/power_supply/BAT1/”</p>
+
+<p>status_line = StatusLine.new(prefix: &#39;t&#39;)</p>
+
+<p>status_line &lt;&lt; Power.new(  formats: {charging: “ %{capacity}%”,
+default: “ %{capacity}%”},  colors: {full: &#39;#69B842&#39;, charging:
+&#39;#F4C91D&#39;, discharging: &#39;#9B3E9B&#39;}  )</p>
+
+<p>status_line &lt;&lt; KeyboardLayout.new(  formats: {il: “ HE”, us: “
+EN”},  colors: {il: &#39;#5E88EF&#39;, us: &#39;#B82E27&#39;}  )</p>
+
+<p>status_line &lt;&lt; Volume.new status_line &lt;&lt; Clock.new(format: “
+%H:%M”) status_line &lt;&lt; Clock.new(format: “ %e/%m/%Y”)</p>
+
+<p>status_line.run “`</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.2.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

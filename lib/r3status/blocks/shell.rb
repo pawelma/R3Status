@@ -1,5 +1,5 @@
-module R3Status
-  class ShellBlock < StaticBlock
+module R3Status::Blocks    
+  class Shell < Base
     attr_accessor :command, :click_commands
     
     def initialize(**args, &block)
@@ -28,5 +28,6 @@ module R3Status
         `#{click_commands[button]}`
       end
     end
+    
   end
 end
