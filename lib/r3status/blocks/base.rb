@@ -20,15 +20,14 @@ module R3Status::Blocks
       :name,
       :formats, 
       :colors, 
-      :clicked_block
+      :clicked_block,
     )
     
     # Creates a new instance of this class.
     # If a block is passed, it will be stored and yielded when the block is clicked.
     def initialize(**args, &block)
-      @colors ||= {}
-      @formats ||= Hash.new(DEFAULT_FORMAT)
-      
+      args = {colors: {}, formats: Hash.new(DEFAULT_FORMAT)}.merge(args)
+
       args.each do |k, v|
         v.default = v[:default] if (v.is_a? Hash) && (v.key? :default)
         send "#{k}=", v
@@ -54,7 +53,6 @@ module R3Status::Blocks
     end
     
     # Returns the string representation of this block.
-    # prefix::
     def to_s(prefix: nil, postfix: nil)
       %({"full_text": "#{prefix}#{full_text}#{postfix}", 
           "color": "#{text_color || DEFAULT_COLOR}", "name": "#{name}",

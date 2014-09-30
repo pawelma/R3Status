@@ -14,6 +14,10 @@ require_relative './blocks/shell.rb'
 
 require_relative './blocks/async.rb'
 
+require_relative './blocks/memory.rb'
+
+require_relative './blocks/block_group.rb'
+
 module R3Status
   # Alias for Blocks::Base
   Block               = Blocks::Base

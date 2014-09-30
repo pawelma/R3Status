@@ -74,9 +74,8 @@ module R3Status
     private
     # Generates a single transmission.
     def transmission
-      @blocks.map { |i| i.to_s(postfix: @postfix, prefix: 
-      @prefix) }.
-              reject { |i| i.nil? }.inject { |i, j| i << ",#{j}"}
+      @blocks.map { |i| i.to_s(postfix: @postfix, prefix: @prefix) }
+             .reject(&:nil?).inject { |i, j| i << ",#{j}"}
     end
     
     # Parses a single input from i3bar.
@@ -91,7 +90,14 @@ module R3Status
         return
       end
       
-      block = @blocks.find { |b| b.name == obj["name"] }
+      block = @blocks.map do |b| 
+        if b.respond_to? :blocks
+          b.blocks
+        else
+          b
+        end
+      end.flatten.find { |b| b.name == obj["name"] }
+      
       block.clicked(obj["button"], obj["x"], obj["y"]) unless block.nil?
     end
   end

@@ -1,8 +1,10 @@
-# R3Status #
+# R3Status [![Gem Version](https://badge.fury.io/rb/r3status.svg)](http://badge.fury.io/rb/r3status)
 
 ## Introduction ##
 
 R3Status is replacement to i3's `i3status`. Written in ruby, it has compatability with the i3bar protocol, and a wider range of feature than i3status.
+
+You can request a feature or a block by creating a github issue.
 
 ## Installation ##
 
@@ -91,7 +93,6 @@ When clicked, a block will recieve the clicked mouse button (Left, Right, Middle
 Some of the default blocks use this capability when appropriate (try scrolling over the volume block, or clicking it with the middle mouse button).
 
 The static block can recieve a block, through the constructor, that will be yielded when the block is clicked.
-
 ## API Reference ##
 
 See http://rubydoc.info/gems/r3status/
@@ -104,27 +105,38 @@ _soon_ (In the meantime, have a look at the source code and maybe you'll figure 
 An older example was using classes such as `VolumeBlock`, `TimeBlock`, and `BatteryBlock`;
 These classes are now deprecated in favour of `Blocks::Volume`, `Blocks::Clock`, and `Blocks::Power`.
 ```ruby
-require_relative '../prog/geany/r3status/lib/r3status.rb'
+require 'r3status'
+
 include R3Status
 include R3Status::Blocks
 
-BAT_PATH = "/sys/class/power_supply/BAT1/"
 
 status_line = StatusLine.new(prefix: '\t')
 
-status_line << Power.new(
+system = BlockGroup.new
+system << Memory.new(format: '  %{val}%', colors: {high: '#ff3333'})
+status_line << system
+
+indicators = BlockGroup.new
+
+indicators << Power.new(
     formats: {charging: "   %{capacity}%", default: "  %{capacity}\%"},
     colors: {full: '#69B842', charging: '#F4C91D', discharging: '#9B3E9B'}
     )
 
-status_line << KeyboardLayout.new(
-    formats: {il: " HE", us: " EN"},
+indicators << KeyboardLayout.new(
+    formats: {il: "  HE", us: "  EN"},
     colors: {il: '#5E88EF', us: '#B82E27'}
     )
 
-status_line << Volume.new
-status_line << Clock.new(format: " %H:%M")
-status_line << Clock.new(format: " %e/%m/%Y")
+indicators << Volume.new
+status_line << indicators
+time = BlockGroup.new(blocks: [
+  Clock.new(format: " %H:%M"),
+  Clock.new(format: " %e/%m/%Y"),
+])
+
+status_line << time
 
 status_line.run
 ```

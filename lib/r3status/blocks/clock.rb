@@ -18,6 +18,7 @@ module R3Status::Blocks
     # Updates the text and color of this block.
     def update
       self.full_text = Time.now.strftime(formats[state])
+      self.text_color = colors[state]
     end
     
     # Returns the current state of the block
