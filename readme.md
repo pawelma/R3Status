@@ -20,10 +20,11 @@ The library consists of a status line (`R3Status::StatusLine`) and blocks (Found
 A status line represents one "task bar", and contains "blocks".
 A block is an indicator that has text and color, and can respond to mouse clicks.
 All default blocks derive from `R3Status::Blocks::Base`, but any object can be used as long as it has the following methods:
+
 ```ruby
   def update; end
   def to_s(prefix, postfix); end
-  def terminate;
+  def terminate; end
 ```
 
 Each block has a set of `formats` and `colors`, that help the block choose the best suitable values based on the block's state.
@@ -32,7 +33,17 @@ At any given time, a block is in one of several states (as defined by each block
 As well as the `formats` and `colors` hashes, a block also has the `format` and `color` attributes,
 which gets and sets the _defualt_ color and format. The default values will be used if no format or value
 was specified for the current state.
-
+## List of Blocks ##
+* Volume indicator
+* Clock
+* Power indicator
+* Keyboard Layout indicator
+* Disk indicator
+* Layout indicator
+* PlayerCTL indicator
+* Group
+* ASync [use at own risk]
+* Shell [use at own risk]
 #### Example ####
 File: `~/bin/r3status_start.rb`:
 

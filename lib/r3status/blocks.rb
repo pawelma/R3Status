@@ -18,6 +18,9 @@ require_relative './blocks/memory.rb'
 
 require_relative './blocks/block_group.rb'
 
+require_relative './blocks/disk.rb'
+
+require_relative './blocks/playerctl.rb'
 module R3Status
   # Alias for Blocks::Base
   Block               = Blocks::Base

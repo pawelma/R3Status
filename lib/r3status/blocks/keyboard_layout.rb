@@ -6,7 +6,7 @@ module R3Status::Blocks
   # as specified by the system. (e.g. +:us+ for US English, +:ru+ for Russian)
   #
   # ==== Format values
-  # +%{val}+, +%{sym}+: The current language symbol.
+  # 8 <tt>%{val}</tt>, <tt>%{sym}</tt>: The current language symbol.
   class KeyboardLayout < Base
     
     # Creates a new instance of this class.

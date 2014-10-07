@@ -5,7 +5,7 @@ module R3Status::Blocks
   #   :charging, :discharging, :full, :unknown, :no_battery
   #
   # ==== Format Values
-  # +%{val}+, +%{capacity}+: The current battery capacity.
+  # * <tt>%{val}</tt>, <tt>%{capacity}</tt>: The current battery capacity.
   class Power < Base
     # The path of the battery on the disk. Examples:
     #  * /sys/class/power_supply/BAT1/

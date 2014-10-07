@@ -7,7 +7,7 @@ module R3Status::Blocks
   #   :muted, :unmuted
   #
   # ==== Format values
-  # +%{val}+, +%{volume}+: The current system volume.
+  # * <tt>+%{val}</tt>, <tt>%{volume}</tt>: The current system volume.
   class Volume < Base
     # The amount of volume (in percents) to change with scroll.
     attr_accessor :step

@@ -6,17 +6,17 @@ module R3Status::Blocks
   #   :low, :normal, :high
   #
   # ==== Format values
-  # +%{val}+, +%{consumption}+: Memrory consumption (in precentage,  without a percent sign).
-  # +%{free}+: The number of free pages in the system.
-  # +%{active}+: The number of active pages in the system.
-  # +%{inactive}+: The number of inactive pages in the system.
-  # +%{wired}+: The number of wired pages in the system.
-  # +%{free_bytes}+: The number of free bytes in the system.
-  # +%{active_bytes}+: The number of active bytes in the system.
-  # +%{inactive_bytes}+: The number of inactive bytes in the system.
-  # +%{wired_bytes}+: The number of wired bytes in the system.
-  # +%{total_bytes}+: The total number of bytes in the system.
-  # +%{pagesize}+: The page size of the memory in bytes.
+  # * <tt>%{val}</tt>, <tt>%{consumption}</tt>: Memrory consumption (in precentage,  without a percent sign).
+  # * <tt>%{free}</tt>: The number of free pages in the system.
+  # * <tt>%{active}</tt>: The number of active pages in the system.
+  # * <tt>%{inactive}</tt>: The number of inactive pages in the system.
+  # * <tt>%{wired}</tt>: The number of wired pages in the system.
+  # * <tt>%{free_bytes}</tt>: The number of free bytes in the system.
+  # * <tt>%{active_bytes}</tt>: The number of active bytes in the system.
+  # * <tt>%{inactive_bytes}</tt>: The number of inactive bytes in the system.
+  # * <tt>%{wired_bytes}</tt>: The number of wired bytes in the system.
+  # * <tt>%{total_bytes}</tt>: The total number of bytes in the system.
+  # * <tt>%{pagesize}</tt>: The page size of the memory in bytes.
   class Memory < Base
   
     # Determines the memory consumption that will be considered low.
